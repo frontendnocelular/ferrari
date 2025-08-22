@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ferrari - Paixão em Movimento</title>
+  
+  <style>
+    :root {
+      --ferrari-red: #dc143c;
+      --ferrari-dark-red: #8b0000;
+      --ferrari-black: #000000;
+      --ferrari-gold: #ffd700;
+      --text-light: #ffffff;
+      --text-gray: #cccccc;
+      --bg-dark: #0a0a0a;
+      --bg-gradient: linear-gradient(135deg, #000000 0%, #1a0505 50%, #000000 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-light);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+           #splash-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #000000, #1a1a1a, #8B0000);
+            z-index: 1000;
+        }
+
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .subtitle {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffffff;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            animation: fadeInSubtitle 2s ease-in-out 4s forwards;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .loading-bar {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #DC143C, #FF4500);
+            width: 0;
+            border-radius: 2px;
+            animation: loadingProgress 6s ease-in-out forwards;
+            box-shadow: 0 0 10px #DC143C;
+        }
+
+        @keyframes fadeInSubtitle {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes loadingProgress {
+            to {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .subtitle {
+                font-size: 1rem;
+            }
+            .loading-bar {
+                width: 280px;
+            }
+        }
+
+    /* HEADER STYLES */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      border-bottom: 1px solid rgba(220, 20, 60, 0.3);
+    }
+
+    header.scrolled {
+      background: rgba(0, 0, 0, 0.98);
+      box-shadow: 0 2px 20px rgba(220, 20, 60, 0.3);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .logo {
+      text-align: center;
+      padding: 1rem 0 0.5rem;
+    }
+
+    .logo h1 {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      color: var(--ferrari-red);
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px rgba(220, 20, 60, 0.5);
+      animation: logoGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes logoGlow {
+      from { text-shadow: 0 0 20px rgba(220, 20, 60, 0.5); }
+      to { text-shadow: 0 0 30px rgba(220, 20, 60, 0.8), 0 0 40px rgba(220, 20, 60, 0.3); }
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0 1rem;
+    }
+
+    .nav-list {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(220, 20, 60, 0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .nav-link:hover::before {
+      left: 100%;
+    }
+
+    .nav-link:hover {
+      color: var(--ferrari-red);
+      transform: translateY(-2px);
+      text-shadow: 0 0 10px rgba(220, 20, 60, 0.5);
+    }
+
+    .mobile-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      position: absolute;
+      right: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .mobile-toggle span {
+      width: 25px;
+      height: 3px;
+      background: var(--ferrari-red);
+      margin: 3px 0;
+      transition: 0.3s;
+    }
+
+    /* HERO SECTION */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      z-index: 2;
+      max-width: 800px;
+      padding: 0 2rem;
+      animation: heroFadeIn 2s ease-out;
+    }
+
+    @keyframes heroFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h2 {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      color: var(--ferrari-red);
+      margin-bottom: 1rem;
+      font-weight: 900;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      animation: titleSlideIn 1.5s ease-out 0.5s both;
+    }
+
+    @keyframes titleSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      margin-bottom: 2rem;
+      color: var(--text-gray);
+      animation: subtitleSlideIn 1.5s ease-out 1s both;
+    }
+
+    @keyframes subtitleSlideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: linear-gradient(45deg, var(--ferrari-red), var(--ferrari-dark-red));
+      color: var(--text-light);
+      font-weight: bold;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+      animation: buttonSlideIn 1.5s ease-out 1.5s both;
+    }
+
+    @keyframes buttonSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(220, 20, 60, 0.4);
+      border-color: var(--ferrari-gold);
+    }
+
+/* Carousel */
+.carousel-container {
+  width: 100%;
+  overflow-x: scroll;
+  display: flex;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+}
+.carousel-container::-webkit-scrollbar {
+  display: none; /* Chrome */
+}
+
+/* Cada faixa (track) agora vira item */
+.carousel-track {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;  /* um pouco menor p/ caber melhor na tela */
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Itens do carrossel */
+.carousel-item {
+  position: relative;
+  border-radius: 25px;
+  overflow: hidden;
+  /* sombra suave vermelha */
+  box-shadow: 0 6px 18px rgba(255, 0, 0, 0.4);
+  aspect-ratio: 3 / 4; /* mantém 3:4 */
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* preenche sem distorcer */
+  border-radius: 16px;
+  transition: transform 0.4s ease;
+}
+
+/* Efeito de destaque no item central */
+.carousel-track:has(.carousel-item:hover),
+.carousel-track:focus-within {
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+/* Os vizinhos vão ficar levemente menores */
+.carousel-track:not(:hover) {
+  transform: scale(0.9);
+  opacity: 0.7;
+}
+
+/* Overlay de texto */
+.carousel-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  color: #fff;
+  text-align: center;
+}
+
+.carousel-overlay p {
+  font-size: 1rem;
+  margin: 0;
+}
+    /* MODELS SECTION */
+    .models-section {
+      padding: 5rem 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .model-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      border: 1px solid rgba(220, 20, 60, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .model-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(220, 20, 60, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .model-card:hover::before {
+      left: 100%;
+    }
+
+    .model-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(220, 20, 60, 0.2);
+      border-color: var(--ferrari-red);
+    }
+
+    .model-card h3 {
+      color: var(--ferrari-red);
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .model-card p {
+      color: var(--text-gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .btn-secondary {
+      padding: 0.8rem 1.5rem;
+      background: transparent;
+      color: var(--ferrari-red);
+      border: 2px solid var(--ferrari-red);
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--ferrari-red);
+      color: var(--text-light);
+      transform: scale(1.05);
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--ferrari-black);
+      padding: 3rem 2rem 1rem;
+      text-align: center;
+      border-top: 1px solid rgba(220, 20, 60, 0.3);
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-size: 2rem;
+      color: var(--ferrari-red);
+      font-weight: 900;
+      margin-bottom: 1rem;
+    }
+
+    .footer-text {
+      color: var(--text-gray);
+      margin-bottom: 2rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .social-link {
+      width: 50px;
+      height: 50px;
+      background: var(--ferrari-red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+      background: var(--ferrari-dark-red);
+      transform: scale(1.1) rotate(360deg);
+    }
+
+    /* SCROLL ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 768px) {
+      .header-container {
+        padding: 0 1rem;
+      }
+
+      .navbar {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        flex-direction: column;
+        padding: 1rem 0;
+      }
+
+      .navbar.active {
+        display: flex;
+      }
+
+      .nav-list {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .nav-link {
+        display: block;
+        padding: 1rem;
+        text-align: center;
+      }
+
+      .mobile-toggle {
+        display: flex;
+      }
+
+      .mobile-toggle.active span:nth-child(1) {
+        transform: rotate(-45deg) translate(-5px, 6px);
+      }
+
+      .mobile-toggle.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .mobile-toggle.active span:nth-child(3) {
+        transform: rotate(45deg) translate(-5px, -6px);
+      }
+
+      .hero h2 {
+        font-size: 2.5rem;
+      }
+
+      .models-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
+      .carousel-item {
+        min-width: 250px;
+        height: 350px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding: 0 1rem;
+      }
+
+      .models-section,
+      .carousel-section {
+        padding: 3rem 1rem;
+      }
+
+      .carousel-item {
+        min-width: 200px;
+        height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  
+        <div id="splash-container">
+        <canvas id="three-canvas"></canvas>
+        
+        <div class="subtitle">
+            A LENDA CONTINUA<br>
+            <span style="font-size: 0.9rem; opacity: 0.7;">SINCE 1947</span>
+        </div>
+        
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+    </div>
+
+  
+  <header id="header">
+    <div class="header-container">
+      <div class="logo">
+        <h1>FERRARI</h1>
+      </div>
+      <nav class="navbar" id="navbar">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="#home" class="nav-link">Início</a></li>
+          <li class="nav-item"><a href="#modelos" class="nav-link">Modelos</a></li>
+          <li class="nav-item"><a href="#gallery" class="nav-link">Galeria</a></li>
+          <li class="nav-item"><a href="#sobre" class="nav-link">Sobre</a></li>
+          <li class="nav-item"><a href="#contato" class="nav-link">Contato</a></li>
+        </ul>
+      </nav>
+      <div class="mobile-toggle" id="mobile-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h2>Pura Velocidade e Paixão</h2>
+      <p>Descubra a emoção de dirigir uma Ferrari. Luxo, inovação e performance em cada detalhe que marca a lenda italiana.</p>
+      <a href="#modelos" class="btn-primary">Explorar Modelos</a>
+    </div>
+  </section>
+
+  <section class="carousel-section" id="gallery">
+    
+    <div class="carousel-container">
+      <div class="carousel-track">
+<div class="carousel-item">
+  <img src="img/ferrari.jpg" alt="Ferrari F8">
+  <div class="carousel-overlay">
+
+  </div>
+</div>
+</div>
+
+      <div class="carousel-track">
+<div class="carousel-item">
+  <img src="img/ferrari1.jpg" alt="Ferrari F8">
+  <div class="carousel-overlay">
+ 
+  </div>
+</div>
+</div>
+
+      <div class="carousel-track">
+<div class="carousel-item">
+  <img src="img/ferrari2.jpg" alt="Ferrari F8">
+  <div class="carousel-overlay">
+
+  </div>
+</div>
+</div>
+
+      <div class="carousel-track">
+<div class="carousel-item">
+  <img src="img/ferrari3.jpg" alt="Ferrari F8">
+  <div class="carousel-overlay">
+
+  </div>
+</div>
+</div>
+
+      <div class="carousel-track">
+<div class="carousel-item">
+  <img src="img/ferrari4.jpg" alt="Ferrari F8">
+  <div class="carousel-overlay">
+    
+  </div>
+</div>
+</div>
+  
+        <div class="carousel-track">
+<div class="carousel-item">
+  <img src="img/ferrari5.jpg" alt="Ferrari F8">
+  <div class="carousel-overlay">
+
+  </div>
+</div>
+</div>
+  
+      </div>
+    </div>
+  </section>
+
+  <section class="models-section" id="modelos">
+    <h2 class="section-title fade-in">Nossos Modelos</h2>
+    <div class="models-grid">
+      <div class="model-card fade-in">
+        <h3>F8 Tributo</h3>
+        <p>O F8 Tributo é uma celebração do motor V8 mais potente da Ferrari, combinando desempenho excepcional com elegância italiana incomparável.</p>
+        <a href="#" class="btn-secondary">Saiba Mais</a>
+      </div>
+      <div class="model-card fade-in">
+        <h3>SF90 Stradale</h3>
+        <p>Primeiro supercarro híbrido plug-in da Ferrari, representando uma nova era de performance sustentável e tecnologia de ponta.</p>
+        <a href="#" class="btn-secondary">Saiba Mais</a>
+      </div>
+      <div class="model-card fade-in">
+        <h3>812 Superfast</h3>
+        <p>O grand tourer mais potente e rápido da história da Ferrari, com motor V12 naturalmente aspirado de 800 cv de potência.</p>
+        <a href="#" class="btn-secondary">Saiba Mais</a>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contato">
+    <div class="footer-content">
+      <div class="footer-logo">FERRARI</div>
+      <p class="footer-text">Paixão, Performance e Tradição Italiana desde 1947</p>
+      <div class="social-links">
+        <a href="#" class="social-link">F</a>
+        <a href="#" class="social-link">I</a>
+        <a href="#" class="social-link">T</a>
+        <a href="#" class="social-link">Y</a>
+      </div>
+      <p>&copy; 2025 Ferrari. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        class FerrariSplash {
+            constructor() {
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(105, window.innerWidth / window.innerHeight, 0.1, 1000);
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: document.getElementById('three-canvas'), 
+                    antialias: true, 
+                    alpha: true 
+                });
+                
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setClearColor(0x000000, 0);
+                this.renderer.shadowMap.enabled = true;
+                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                
+                this.letters = [];
+                this.particles = [];
+                this.time = 0;
+                this.animationPhase = 0;
+                
+                this.init();
+                this.animate();
+            }
+
+            init() {
+                this.camera.position.set(0, 5, 12);
+                this.camera.fov = 60;
+
+                // Criar sistema de partículas
+                this.createParticleSystem();
+                
+                // Criar letras 3D do FERRARI
+                this.createFerrariLetters();
+                
+                // Adicionar luzes dramáticas
+                this.setupLighting();
+
+                // Redimensionamento responsivo
+                window.addEventListener('resize', () => this.onWindowResize());
+            }
+
+            createParticleSystem() {
+                const particleGeometry = new THREE.BufferGeometry();
+                const particleCount = 200;
+                const positions = new Float32Array(particleCount * 3);
+                const colors = new Float32Array(particleCount * 3);
+                const sizes = new Float32Array(particleCount);
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const i3 = i * 3;
+                    
+                    positions[i3] = (Math.random() - 0.9) * 30;
+                    positions[i3 + 1] = (Math.random() - 0.5) * 40;
+                    positions[i3 + 2] = (Math.random() - 0.5) * 20;
+                    
+                    const red = 0.5 + Math.random() * 0.1;
+                    colors[i3] = red;
+                    colors[i3 + 1] = 0;
+                    colors[i3 + 2] = 0;
+                    
+                    sizes[i] = Math.random() * 1.5 + 0.5;
+                }
+                
+                particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                particleGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+                
+                const particleMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0 }
+                    },
+                    vertexShader: `
+                        attribute float size;
+                        attribute vec3 color;
+                        varying vec3 vColor;
+                        uniform float time;
+                        
+                        void main() {
+                            vColor = color;
+                            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                            gl_PointSize = size * (200.0 / -mvPosition.z) * (0.3 + 0.3 * sin(time + position.x));
+                            gl_Position = projectionMatrix * mvPosition;
+                        }
+                    `,
+                    fragmentShader: `
+                        varying vec3 vColor;
+                        
+                        void main() {
+                            float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+                            if (distanceToCenter > 0.5) discard;
+                            
+                            float alpha = (1.0 - distanceToCenter * 2.0) * 0.3;
+                            gl_FragColor = vec4(vColor, alpha);
+                        }
+                    `,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending
+                });
+                
+                this.particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+                this.scene.add(this.particleSystem);
+            }
+
+            createFerrariLetters() {
+                const letterShapes = this.getLetterGeometries();
+                const letterSpacing = 1.8;
+                const startX = -5.8;
+                
+                letterShapes.forEach((shapeData, index) => {
+                    const geometry = new THREE.ExtrudeGeometry(shapeData.shape, {
+                        depth: 0.8,
+                        bevelEnabled: true,
+                        bevelThickness: 0.12,
+                        bevelSize: 0.08,
+                        bevelOffset: -0.02,
+                        bevelSegments: 16,
+                        curveSegments: 32
+                    });
+                    
+                    const material = new THREE.MeshPhysicalMaterial({
+                        color: 0x5B0000,
+                        metalness: 0.5,
+                        roughness: 0.25,
+                        reflectivity: 1.0,
+                        clearcoat: 0.6,
+                        clearcoatRoughness: 0.12,
+                        emissive: 0x660000,
+                        emissiveIntensity: 0.3,
+                        transparent: false,
+                        ior: 1.6,
+                        transmission: 0.02,
+                        thickness: 0.2
+                    });
+                    
+                    const letter = new THREE.Mesh(geometry, material);
+                    letter.castShadow = true;
+                    letter.receiveShadow = true;
+                    
+                    // Posição inicial (espalhadas com mais profundidade)
+                    const randomOffset = 25;
+                    const depthVariation = 15;
+                    letter.position.set(
+                        startX + index * letterSpacing + (Math.random() - 0.5) * randomOffset,
+                        (Math.random() - 0.5) * randomOffset,
+                        (Math.random() - 0.5) * depthVariation - 10
+                    );
+                    
+                    // Rotação inicial aleatória mais dramática
+                    letter.rotation.set(
+                        (Math.random() - 0.5) * Math.PI,
+                        (Math.random() - 0.5) * Math.PI * 2,
+                        (Math.random() - 0.5) * Math.PI
+                    );
+                    
+                    // Escala inicial pequena
+                    letter.scale.set(0.1, 0.1, 0.1);
+                    
+                    // Posição final com variação em Z para profundidade
+                    const depthOffset = (index - 3) * 0.3; // Letras centrais mais próximas
+                    letter.userData = {
+                        finalPosition: { 
+                            x: startX + index * letterSpacing, 
+                            y: 0, 
+                            z: depthOffset 
+                        },
+                        finalRotation: { x: 0, y: 0, z: 0 },
+                        finalScale: { x: 1, y: 1, z: 1 },
+                        delay: index * 0.3,
+                        letter: shapeData.letter
+                    };
+                    
+                    this.letters.push(letter);
+                    this.scene.add(letter);
+                });
+            }
+
+            getLetterGeometries() {
+                // Criar formas profissionais e elegantes para cada letra de FERRARI
+                const letters = [];
+                
+                // F - Tipografia elegante com curvas suaves
+                const fShape = new THREE.Shape();
+                fShape.moveTo(0.05, 0);
+                fShape.lineTo(0.05, 2.4);
+                fShape.bezierCurveTo(0.05, 2.45, 0.07, 2.47, 0.12, 2.47);
+                fShape.lineTo(1.35, 2.47);
+                fShape.bezierCurveTo(1.4, 2.47, 1.42, 2.45, 1.42, 2.4);
+                fShape.lineTo(1.42, 2.1);
+                fShape.bezierCurveTo(1.42, 2.05, 1.4, 2.03, 1.35, 2.03);
+                fShape.lineTo(0.35, 2.03);
+                fShape.lineTo(0.35, 1.4);
+                fShape.lineTo(1.15, 1.4);
+                fShape.bezierCurveTo(1.2, 1.4, 1.22, 1.38, 1.22, 1.33);
+                fShape.lineTo(1.22, 1.07);
+                fShape.bezierCurveTo(1.22, 1.02, 1.2, 1.0, 1.15, 1.0);
+                fShape.lineTo(0.35, 1.0);
+                fShape.lineTo(0.35, 0.05);
+                fShape.bezierCurveTo(0.35, 0, 0.32, -0.02, 0.27, -0.02);
+                fShape.lineTo(0.12, -0.02);
+                fShape.bezierCurveTo(0.07, -0.02, 0.05, 0, 0.05, 0.05);
+                letters.push({ shape: fShape, letter: 'F' });
+                
+                // E - Elegante com serifas sutis
+                const eShape = new THREE.Shape();
+                eShape.moveTo(0.05, 0);
+                eShape.lineTo(0.05, 2.4);
+                eShape.bezierCurveTo(0.05, 2.45, 0.07, 2.47, 0.12, 2.47);
+                eShape.lineTo(1.35, 2.47);
+                eShape.bezierCurveTo(1.4, 2.47, 1.42, 2.45, 1.42, 2.4);
+                eShape.lineTo(1.42, 2.1);
+                eShape.bezierCurveTo(1.42, 2.05, 1.4, 2.03, 1.35, 2.03);
+                eShape.lineTo(0.35, 2.03);
+                eShape.lineTo(0.35, 1.4);
+                eShape.lineTo(1.1, 1.4);
+                eShape.bezierCurveTo(1.15, 1.4, 1.17, 1.38, 1.17, 1.33);
+                eShape.lineTo(1.17, 1.07);
+                eShape.bezierCurveTo(1.17, 1.02, 1.15, 1.0, 1.1, 1.0);
+                eShape.lineTo(0.35, 1.0);
+                eShape.lineTo(0.35, 0.44);
+                eShape.lineTo(1.35, 0.44);
+                eShape.bezierCurveTo(1.4, 0.44, 1.42, 0.42, 1.42, 0.37);
+                eShape.lineTo(1.42, 0.07);
+                eShape.bezierCurveTo(1.42, 0.02, 1.4, 0, 1.35, 0);
+                eShape.lineTo(0.12, 0);
+                eShape.bezierCurveTo(0.07, 0, 0.05, 0.02, 0.05, 0.07);
+                letters.push({ shape: eShape, letter: 'E' });
+                
+                // R - Design sofisticado com curvas orgânicas
+                const rShape = new THREE.Shape();
+                rShape.moveTo(0.05, 0);
+                rShape.lineTo(0.05, 2.4);
+                rShape.bezierCurveTo(0.05, 2.45, 0.07, 2.47, 0.12, 2.47);
+                rShape.lineTo(0.9, 2.47);
+                rShape.bezierCurveTo(1.25, 2.47, 1.45, 2.2, 1.45, 1.75);
+                rShape.bezierCurveTo(1.45, 1.4, 1.3, 1.15, 1.05, 1.1);
+                rShape.lineTo(1.4, 0.1);
+                rShape.bezierCurveTo(1.42, 0.05, 1.4, 0, 1.32, 0);
+                rShape.lineTo(1.05, 0);
+                rShape.bezierCurveTo(1.0, 0, 0.98, 0.02, 0.95, 0.07);
+                rShape.lineTo(0.68, 0.95);
+                rShape.lineTo(0.35, 0.95);
+                rShape.lineTo(0.35, 0.05);
+                rShape.bezierCurveTo(0.35, 0, 0.32, -0.02, 0.27, -0.02);
+                rShape.lineTo(0.12, -0.02);
+                rShape.bezierCurveTo(0.07, -0.02, 0.05, 0, 0.05, 0.05);
+                // Parte superior do R com curvas suaves
+                const rHole = new THREE.Path();
+                rHole.moveTo(0.35, 1.35);
+                rHole.lineTo(0.85, 1.35);
+                rHole.bezierCurveTo(1.05, 1.35, 1.15, 1.45, 1.15, 1.65);
+                rHole.bezierCurveTo(1.15, 1.85, 1.05, 1.95, 0.85, 1.95);
+                rHole.lineTo(0.35, 1.95);
+                rHole.lineTo(0.35, 1.35);
+                rShape.holes.push(rHole);
+                letters.push({ shape: rShape, letter: 'R' });
+                
+                // R (segunda) - Clone melhorado
+                const rShape2 = rShape.clone();
+                letters.push({ shape: rShape2, letter: 'R' });
+                
+                // A - Forma triangular elegante
+                const aShape = new THREE.Shape();
+                aShape.moveTo(0.7, 2.47);
+                aShape.bezierCurveTo(0.75, 2.47, 0.77, 2.45, 0.79, 2.4);
+                aShape.lineTo(1.35, 0.1);
+                aShape.bezierCurveTo(1.37, 0.05, 1.35, 0, 1.27, 0);
+                aShape.lineTo(0.98, 0);
+                aShape.bezierCurveTo(0.93, 0, 0.91, 0.02, 0.89, 0.07);
+                aShape.lineTo(0.82, 0.55);
+                aShape.lineTo(0.58, 0.55);
+                aShape.lineTo(0.51, 0.07);
+                aShape.bezierCurveTo(0.49, 0.02, 0.47, 0, 0.42, 0);
+                aShape.lineTo(0.13, 0);
+                aShape.bezierCurveTo(0.05, 0, 0.03, 0.05, 0.05, 0.1);
+                aShape.lineTo(0.61, 2.4);
+                aShape.bezierCurveTo(0.63, 2.45, 0.65, 2.47, 0.7, 2.47);
+                // Barra horizontal do A com curvas
+                const aHole = new THREE.Path();
+                aHole.moveTo(0.54, 0.9);
+                aHole.lineTo(0.86, 0.9);
+                aHole.bezierCurveTo(0.88, 0.9, 0.89, 0.92, 0.87, 0.95);
+                aHole.lineTo(0.84, 1.15);
+                aHole.bezierCurveTo(0.82, 1.18, 0.8, 1.2, 0.78, 1.2);
+                aHole.lineTo(0.62, 1.2);
+                aHole.bezierCurveTo(0.6, 1.2, 0.58, 1.18, 0.56, 1.15);
+                aHole.lineTo(0.53, 0.95);
+                aHole.bezierCurveTo(0.51, 0.92, 0.52, 0.9, 0.54, 0.9);
+                aShape.holes.push(aHole);
+                letters.push({ shape: aShape, letter: 'A' });
+                
+                // R (terceira) - Clone melhorado
+                const rShape3 = rShape.clone();
+                letters.push({ shape: rShape3, letter: 'R' });
+                
+                // I - Tipografia clássica com serifas
+                const iShape = new THREE.Shape();
+                iShape.moveTo(0.05, 0);
+                iShape.lineTo(0.05, 0.37);
+                iShape.bezierCurveTo(0.05, 0.42, 0.07, 0.44, 0.12, 0.44);
+                iShape.lineTo(0.35, 0.44);
+                iShape.lineTo(0.35, 2.03);
+                iShape.lineTo(0.12, 2.03);
+                iShape.bezierCurveTo(0.07, 2.03, 0.05, 2.05, 0.05, 2.1);
+                iShape.lineTo(0.05, 2.47);
+                iShape.bezierCurveTo(0.05, 2.52, 0.07, 2.54, 0.12, 2.54);
+                iShape.lineTo(0.88, 2.54);
+                iShape.bezierCurveTo(0.93, 2.54, 0.95, 2.52, 0.95, 2.47);
+                iShape.lineTo(0.95, 2.1);
+                iShape.bezierCurveTo(0.95, 2.05, 0.93, 2.03, 0.88, 2.03);
+                iShape.lineTo(0.65, 2.03);
+                iShape.lineTo(0.65, 0.44);
+                iShape.lineTo(0.88, 0.44);
+                iShape.bezierCurveTo(0.93, 0.44, 0.95, 0.42, 0.95, 0.37);
+                iShape.lineTo(0.95, 0);
+                iShape.bezierCurveTo(0.95, -0.05, 0.93, -0.07, 0.88, -0.07);
+                iShape.lineTo(0.12, -0.07);
+                iShape.bezierCurveTo(0.07, -0.07, 0.05, -0.05, 0.05, 0);
+                letters.push({ shape: iShape, letter: 'I' });
+                
+                return letters;
+            }
+
+            setupLighting() {
+                // Luz ambiente equilibrada para ver detalhes
+                const ambientLight = new THREE.AmbientLight(0x505050, 0.5);
+                this.scene.add(ambientLight);
+                
+                // Luz principal mais suave
+                const keyLight = new THREE.DirectionalLight(0xFFFFFF, 1.8);
+                keyLight.position.set(8, 8, 12);
+                keyLight.castShadow = true;
+                keyLight.shadow.mapSize.width = 2048;
+                keyLight.shadow.mapSize.height = 2048;
+                keyLight.shadow.camera.near = 0.1;
+                keyLight.shadow.camera.far = 40;
+                keyLight.shadow.camera.left = -12;
+                keyLight.shadow.camera.right = 12;
+                keyLight.shadow.camera.top = 12;
+                keyLight.shadow.camera.bottom = -12;
+                keyLight.shadow.bias = -0.0002;
+                this.scene.add(keyLight);
+                
+                // Fill light mais suave
+                const fillLight = new THREE.DirectionalLight(0x6666AA, 0.7);
+                fillLight.position.set(-6, 4, 6);
+                this.scene.add(fillLight);
+                
+                // Rim light para definir bordas
+                const rimLight = new THREE.DirectionalLight(0xFFAA66, 1.0);
+                rimLight.position.set(-8, -4, -8);
+                this.scene.add(rimLight);
+                
+                // Spotlight principal mais controlado
+                const mainSpot = new THREE.SpotLight(0xFFFFFF, 2.0);
+                mainSpot.position.set(0, 10, 10);
+                mainSpot.target.position.set(0, 0, 0);
+                mainSpot.angle = Math.PI / 5;
+                mainSpot.penumbra = 0.4;
+                mainSpot.decay = 1.5;
+                mainSpot.distance = 35;
+                mainSpot.castShadow = true;
+                this.scene.add(mainSpot);
+                this.scene.add(mainSpot.target);
+                
+                // Luz vermelha sangue ambiente
+                const redFill = new THREE.PointLight(0x8B0000, 1.2, 25);
+                redFill.position.set(0, 0, 6);
+                this.scene.add(redFill);
+                
+                // Luzes laterais mais suaves para definir forma
+                const leftRim = new THREE.SpotLight(0xFFCCCC, 0.8);
+                leftRim.position.set(-12, 2, 4);
+                leftRim.target.position.set(-2, 0, 0);
+                leftRim.angle = Math.PI / 3;
+                leftRim.penumbra = 0.5;
+                this.scene.add(leftRim);
+                this.scene.add(leftRim.target);
+                
+                const rightRim = new THREE.SpotLight(0xCCCCFF, 0.8);
+                rightRim.position.set(12, 2, 4);
+                rightRim.target.position.set(2, 0, 0);
+                rightRim.angle = Math.PI / 3;
+                rightRim.penumbra = 0.5;
+                this.scene.add(rightRim);
+                this.scene.add(rightRim.target);
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                this.time += 0.016;
+                
+                // Atualizar partículas
+                if (this.particleSystem) {
+                    this.particleSystem.material.uniforms.time.value = this.time;
+                    this.particleSystem.rotation.y += 0.001;
+                }
+                
+                // Animar entrada das letras
+                this.animateLetters();
+                
+                // Movimento dinâmico da câmera com profundidade
+                const cameraRadius = 3;
+                const cameraHeight = 2 + Math.sin(this.time * 0.3) * 1;
+                this.camera.position.x = Math.sin(this.time * 0.2) * cameraRadius;
+                this.camera.position.y = cameraHeight;
+                this.camera.position.z = 12 + Math.cos(this.time * 0.15) * 2;
+                this.camera.lookAt(0, 0, 0);
+                
+                this.renderer.render(this.scene, this.camera);
+            }
+
+            animateLetters() {
+                const animationDuration = 2;
+                
+                this.letters.forEach((letter, index) => {
+                    const startTime = letter.userData.delay;
+                    const progress = Math.max(0, Math.min(1, (this.time - startTime) / animationDuration));
+                    
+                    if (progress > 0) {
+                        // Easing suave
+                        const easeOut = 1 - Math.pow(1 - progress, 3);
+                        
+                        // Animar posição
+                        letter.position.lerp(new THREE.Vector3(
+                            letter.userData.finalPosition.x,
+                            letter.userData.finalPosition.y,
+                            letter.userData.finalPosition.z
+                        ), easeOut);
+                        
+                        // Animar rotação
+                        letter.rotation.x = THREE.MathUtils.lerp(letter.rotation.x, letter.userData.finalRotation.x, easeOut * 0.1);
+                        letter.rotation.y = THREE.MathUtils.lerp(letter.rotation.y, letter.userData.finalRotation.y, easeOut * 0.1);
+                        letter.rotation.z = THREE.MathUtils.lerp(letter.rotation.z, letter.userData.finalRotation.z, easeOut * 0.1);
+                        
+                        // Animar escala
+                        const scale = THREE.MathUtils.lerp(0.1, 1, easeOut);
+                        letter.scale.set(scale, scale, scale);
+                        
+                        // Adicionar flutuação 3D quando completa
+                        if (progress >= 1) {
+                            letter.position.y += Math.sin(this.time * 2 + index) * 0.08;
+                            letter.position.z += Math.cos(this.time * 1.5 + index) * 0.05;
+                            letter.rotation.z = Math.sin(this.time + index) * 0.015;
+                            letter.rotation.x = Math.cos(this.time * 0.8 + index) * 0.01;
+                        }
+                        
+                        // Efeito de brilho mais sutil para ver detalhes
+                        const baseGlow = 0.6;
+                        const pulseGlow = Math.sin(this.time * 2 + index * 0.5) * 0.2;
+                        const flickerGlow = Math.sin(this.time * 6 + index) * 0.05;
+                        letter.material.emissiveIntensity = baseGlow + pulseGlow + flickerGlow;
+                    }
+                });
+            }
+
+            onWindowResize() {
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        }
+
+        // Inicializar splash screen
+        document.addEventListener('DOMContentLoaded', () => {
+            const splash = new FerrariSplash();
+            
+            // Remover splash screen após 6 segundos
+            setTimeout(() => {
+                document.getElementById('splash-container').style.animation = 'fadeOut 1s ease-out forwards';
+                setTimeout(() => {
+                    document.getElementById('splash-container').style.display = 'none';
+                }, 1000);
+            }, 6000);
+        });
+
+        // Adicionar animação de fade out
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                to {
+                    opacity: 0;
+                    transform: scale(0.8);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+
+  <script>
+    // Header scroll effect
+    const header = document.getElementById('header');
+    const mobileToggle = document.getElementById('mobile-toggle');
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile menu toggle
+    mobileToggle.addEventListener('click', () => {
+      navbar.classList.toggle('active');
+      mobileToggle.classList.toggle('active');
+    });
+
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navbar.classList.remove('active');
+        mobileToggle.classList.remove('active');
+      });
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          const headerHeight = header.offsetHeight;
+          const targetPosition = target.offsetTop - headerHeight;
+          
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // Fade in animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+
+
+    // Parallax effect for hero section
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const hero = document.querySelector('.hero');
+      const rate = scrolled * -0.5;
+      
+      if (hero) {
+        hero.style.transform = `translateY(${rate}px)`;
+      }
+    });
+
+    // Add dynamic loading effect
+    window.addEventListener('load', () => {
+      document.body.classList.add('loaded');
+    });
+
+
+
+    // Dynamic text animation
+    function typeWriter(element, text, speed = 100) {
+      let i = 0;
+      element.textContent = '';
+      
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        }
+      }
+      type();
+    }
+
+    // Add stagger animation to model cards
+    const modelCards = document.querySelectorAll('.model-card');
+    modelCards.forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.2}s`;
+    });
+
+    // Enhanced scroll effects
+    let ticking = false;
+    
+    function updateScrollEffects() {
+      const scrollTop = window.pageYOffset;
+      
+      // Parallax for different sections
+      document.querySelectorAll('[data-parallax]').forEach(element => {
+        const speed = element.dataset.parallax;
+        const yPos = -(scrollTop * speed);
+        element.style.transform = `translateY(${yPos}px)`;
+      });
+      
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateScrollEffects);
+        ticking = true;
+      }
+    });
+
+    // Add intersection observer for advanced animations
+    const advancedObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (entry.target.classList.contains('section-title')) {
+            entry.target.style.animation = 'slideInFromLeft 1s ease-out forwards';
+          }
+          if (entry.target.classList.contains('model-card')) {
+            const delay = Array.from(entry.target.parentNode.children).indexOf(entry.target) * 200;
+            entry.target.style.animation = `slideInFromBottom 0.8s ease-out ${delay}ms forwards`;
+          }
+        }
+      });
+    }, { threshold: 0.2 });
+
+    // Observe elements for advanced animations
+    document.querySelectorAll('.section-title, .model-card').forEach(el => {
+      advancedObserver.observe(el);
+    });
+
+    // Add custom CSS animations
+    const advancedStyles = document.createElement('style');
+    advancedStyles.textContent = `
+      @keyframes slideInFromLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-100px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes slideInFromBottom {
+        from {
+          opacity: 0;
+          transform: translateY(50px) scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      
+
+      
+      .model-card {
+        opacity: 0;
+      }
+      
+      .section-title {
+        opacity: 0;
+      }
+      
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #000;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(45deg, #dc143c, #8b0000);
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(45deg, #8b0000, #dc143c);
+      }
+      
+      /* Smooth focus styles */
+      .nav-link:focus,
+      .btn-primary:focus,
+      .btn-secondary:focus {
+        outline: 2px solid #ffd700;
+        outline-offset: 2px;
+      }
+      
+      /* Enhanced mobile animations */
+      @media (max-width: 768px) {
+        .hero-content {
+          animation: mobileHeroSlide 2s ease-out;
+        }
+        
+        @keyframes mobileHeroSlide {
+          from {
+            opacity: 0;
+            transform: translateY(100px) scale(0.8);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+      }
+      
+      /* Loading states */
+      .loading-shimmer {
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+      }
+      
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+    `;
+    
+    document.head.appendChild(advancedStyles);
+
+    // Performance optimization for scroll events
+    const throttle = (func, delay) => {
+      let timeoutId;
+      let lastExecTime = 0;
+      return function (...args) {
+        const currentTime = Date.now();
+        
+        if (currentTime - lastExecTime > delay) {
+          func.apply(this, args);
+          lastExecTime = currentTime;
+        } else {
+          clearTimeout(timeoutId);
+          timeoutId = setTimeout(() => {
+            func.apply(this, args);
+            lastExecTime = Date.now();
+          }, delay - (currentTime - lastExecTime));
+        }
+      };
+    };
+
+    // Optimized scroll handler
+    const optimizedScrollHandler = throttle(() => {
+      const scrollTop = window.pageYOffset;
+      
+      // Update header
+      if (scrollTop > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      // Parallax effect
+      const hero = document.querySelector('.hero');
+      if (hero) {
+        hero.style.transform = `translateY(${scrollTop * -0.3}px)`;
+      }
+    }, 16); // ~60fps
+
+    window.addEventListener('scroll', optimizedScrollHandler);
+
+    // Enhanced error handling for images
+    document.querySelectorAll('img').forEach(img => {
+      img.addEventListener('error', function() {
+        this.style.background = 'linear-gradient(45deg, #dc143c, #8b0000)';
+        this.style.display = 'flex';
+        this.style.alignItems = 'center';
+        this.style.justifyContent = 'center';
+        this.innerHTML = '<span style="color: white; font-weight: bold;">FERRARI</span>';
+      });
+    });
+
+    // Keyboard navigation support
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navbar.classList.contains('active')) {
+        navbar.classList.remove('active');
+        mobileToggle.classList.remove('active');
+      }
+    });
+
+    // Add subtle page transition effects
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.style.opacity = '0';
+      setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+      }, 100);
+    });
+  </script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector(".carousel-container");
+  const tracks = document.querySelectorAll(".carousel-track");
+
+  function updateScale() {
+    const containerCenter = container.scrollLeft + container.offsetWidth / 2;
+
+    tracks.forEach(track => {
+      const rect = track.getBoundingClientRect();
+      const trackCenter = rect.left + rect.width / 2;
+
+      const distance = Math.abs(container.offsetWidth / 2 - (trackCenter - container.getBoundingClientRect().left));
+
+      // quanto mais perto do centro, maior o scale
+      const scale = Math.max(0.9, 1.1 - distance / 600);
+      track.style.transform = `scale(${scale})`;
+      track.style.opacity = scale > 1 ? "1" : "0.7";
+    });
+  }
+
+  // Atualiza no scroll e no resize
+  container.addEventListener("scroll", updateScale);
+  window.addEventListener("resize", updateScale);
+
+  // inicializa
+  updateScale();
+});
+</script>
+</body>
+</html>
